@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Sawa 连击争霸赛</title>
+    <style>
+      :root { --ink:#17262c; --muted:#718087; --paper:#f3f6f6; --surface:#fff; --line:#dfe6e6; --coral:#ee5949; --gold:#f7c84e; --teal:#168f84; --navy:#203945; --shadow:0 10px 26px rgba(28,48,55,.10); }
+      * { box-sizing:border-box; }
+      body { margin:0; min-height:100vh; background:#dce5e6; color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; }
+      button { font:inherit; }
+      .phone { width:min(100%,430px); min-height:100vh; margin:0 auto; overflow:hidden; background:var(--paper); }
+      .hero { position:relative; overflow:hidden; padding:max(20px,env(safe-area-inset-top)) 20px 23px; color:#fff; background:var(--navy); }
+      .hero:after,.hero:before { position:absolute; border:1px solid rgba(255,255,255,.14); border-radius:50%; content:""; }
+      .hero:before { width:300px;height:300px;right:-130px;top:-200px; }.hero:after { width:170px;height:170px;right:40px;top:-113px; }
+      .topbar,.hero-copy { position:relative; z-index:1; }.topbar { display:flex;align-items:center;justify-content:space-between;font-size:13px; }.header-actions { display:flex;align-items:center;gap:14px; }.rule { border:0;padding:3px 0;color:#fff;background:transparent;cursor:pointer; }.eyebrow { margin:25px 0 7px;color:var(--gold);font-size:12px;font-weight:800; }.hero h1 { margin:0;font-size:30px;line-height:1.15; }.sub { margin:9px 0 0;max-width:305px;color:rgba(255,255,255,.76);font-size:13px;line-height:1.55; }
+      main { padding:16px 16px 32px; }.section-head { display:flex;align-items:center;justify-content:space-between;margin:20px 1px 10px; }.section-head h2 { margin:0;font-size:18px; }.section-head span { color:var(--muted);font-size:12px; }
+      .quick-play { border:1px solid var(--line);padding:14px;background:#fff; }.quick-play-head { display:flex;align-items:center;justify-content:space-between;margin-bottom:12px; }.quick-play-head h2 { margin:0;font-size:16px; }.quick-play-head span { color:var(--muted);font-size:11px; }.play-steps { display:grid;grid-template-columns:repeat(3,1fr);gap:8px; }.play-step { position:relative;min-height:104px;padding:10px 8px;background:#f7fafa; }.play-step:not(:last-child):after { position:absolute;right:-6px;top:43px;z-index:1;width:10px;height:10px;border-top:1px solid #9badb1;border-right:1px solid #9badb1;content:"";transform:rotate(45deg);background:#f7fafa; }.play-icon { display:grid;width:31px;height:31px;place-items:center;margin-bottom:9px;border-radius:50%;color:#fff;font-size:12px;font-weight:800; }.play-step:nth-child(1) .play-icon { background:#2e7089; }.play-step:nth-child(2) .play-icon { background:#ee5949; }.play-step:nth-child(3) .play-icon { background:#cd9b30; }.play-step b { display:block;font-size:12px; }.play-step span { display:block;margin-top:4px;color:var(--muted);font-size:10px;line-height:1.4; }
+      .track-tabs { display:grid;grid-template-columns:1fr 1fr;gap:8px; }.track-tab { min-height:88px;border:1px solid var(--line);padding:13px;color:var(--ink);background:#fff;cursor:pointer;text-align:left; }.track-tab.active { border:2px solid var(--navy);padding:12px;box-shadow:0 7px 16px rgba(32,57,69,.12); }.track-tab b { display:block;font-size:16px; }.track-tab span { display:block;margin-top:6px;color:var(--muted);font-size:11px;line-height:1.4; }.track-tab.active b { color:var(--teal); }.track-tab.active span { color:#486068; }
+      .milestones { display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px; }.milestone { padding:8px;border:1px solid var(--line);text-align:center;background:#fafcfc; }.milestone b { display:block;color:#a16e10;font-size:13px; }.milestone span { display:block;margin-top:4px;color:var(--muted);font-size:10px; }
+      .gift-shelf { display:grid;grid-template-columns:repeat(4,1fr);gap:8px; }.gift { min-height:100px;padding:9px 7px;border:1px solid var(--line);color:var(--ink);text-align:left;background:#fff;cursor:pointer; }.gift.selected { border:2px solid var(--coral);padding:8px 6px;box-shadow:0 7px 16px rgba(238,89,73,.13); }.gift-art { display:grid;width:34px;height:34px;place-items:center;margin-bottom:7px;border-radius:50%;color:#fff;font-size:11px;font-weight:800; }.g10{background:#4d8ed1}.g15{background:#168f84}.g50{background:#cf704d}.g150{background:#9363be}.g399{background:#cd9b30}.g999{background:#cc4d72}.g1299{background:#2e7089}.g5999{background:#28325e}.gift-name { display:block;overflow:hidden;font-size:12px;font-weight:800;text-overflow:ellipsis;white-space:nowrap; }.gift-price { display:block;margin-top:3px;color:var(--muted);font-size:10px; }
+      .record-entry { display:inline-flex;align-items:center;gap:5px;border:0;padding:0;color:var(--teal);background:transparent;cursor:pointer;font-size:12px;font-weight:800; }.record-entry:after { content:'>';font-size:13px; }.record-track-tabs { display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px; }.record-track-tab { border:1px solid var(--line);padding:10px;color:#627077;background:#fff;cursor:pointer;font-size:13px;font-weight:800; }.record-track-tab.active { border-color:var(--navy);color:#fff;background:var(--navy); }.record-gift-shelf { display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px; }.record-gift { min-height:76px;border:1px solid var(--line);padding:8px 6px;color:var(--ink);background:#fff;cursor:pointer;text-align:left; }.record-gift.active { border:2px solid var(--coral);padding:7px 5px;background:#fffaf8; }.record-gift .gift-art { width:28px;height:28px;margin-bottom:5px;font-size:10px; }.record-gift .gift-name { font-size:11px; }.record-gift .gift-price { font-size:9px; }.record-count { margin:14px 0 2px;color:#536168;font-size:12px;font-weight:800; }.all-records { display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px; }.record-pill { padding:11px;border:1px solid var(--line);background:#fff;cursor:pointer;text-align:left; }.record-pill span { display:block;color:var(--muted);font-size:11px; }.record-pill b { display:block;margin-top:4px;color:var(--ink);font-size:16px; }.record-pill small { display:block;margin-top:4px;color:var(--coral);font-size:10px; }
+      .selected-title { display:flex;align-items:center;gap:10px;padding:14px 15px;border:1px solid var(--line);border-bottom:0;background:#fff; }.selected-art { display:grid;width:38px;height:38px;place-items:center;border-radius:50%;color:#fff;font-size:11px;font-weight:800; }.selected-title h3 { margin:0;font-size:16px; }.selected-title p { margin:3px 0 0;color:var(--muted);font-size:12px; }.track-chip { display:inline-block;margin-top:5px;padding:3px 6px;color:#42616a;background:#eaf3f2;font-size:10px;font-weight:800; }
+      .rank-panel { overflow:hidden;border:1px solid var(--line);background:#fff; }.rank-scope { display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:#e8eeee; }.rank-scope.two { grid-template-columns:repeat(2,1fr); }.rank-scope button,.period button { border:0;background:transparent;cursor:pointer; }.rank-scope button { padding:9px 3px;color:#5e6b71;font-size:13px; }.rank-scope button.active { color:var(--ink);background:#fff;box-shadow:0 2px 7px rgba(25,44,50,.10);font-weight:800; }
+      .rank-toolbar { display:flex;align-items:center;justify-content:space-between;padding:13px 14px 10px; }.track-title { color:#526168;font-size:12px;font-weight:800; }.period { display:flex;overflow:hidden;border:1px solid var(--line); }.period button { padding:6px 8px;color:#718087;font-size:11px; }.period button.active { color:#8d6012;background:#ffe6a6;font-weight:800; }
+      .rank-explain { margin:0 14px 11px;color:var(--muted);font-size:11px;line-height:1.45; }.leader { display:grid;grid-template-columns:25px 38px 1fr auto;align-items:center;gap:9px;min-height:54px;padding:9px 13px;border-top:1px solid var(--line); }.rank { color:#7a878c;font-size:13px;font-weight:800;text-align:center; }.rank.top { color:#b87b00; }.avatar { display:grid;width:36px;height:36px;place-items:center;border-radius:50%;color:#fff;font-size:12px;font-weight:800; }.a1{background:#e18464}.a2{background:#6197ca}.a3{background:#9978c5}.a4{background:#53a796}.a5{background:#536779}.leader-name { font-size:14px;font-weight:800; }.leader-score { color:var(--coral);font-size:14px;font-weight:800;text-align:right; }.mine { background:#edf7f5; }.my-gap { display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px;border:1px solid #edc96a;padding:13px;background:#fff9e9; }.my-gap-label { color:#8b6618;font-size:11px; }.my-gap b { display:block;margin-top:4px;font-size:15px; }.my-gap strong { display:block;color:var(--coral);font-size:13px;text-align:right; }.my-gap small { display:block;margin-top:4px;color:#7a6a49;font-size:10px;text-align:right; }
+      .go-room { display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:14px;border:0;padding:15px;color:#fff;background:var(--coral);cursor:pointer;text-align:left; }.go-room small { display:block;margin-bottom:4px;color:rgba(255,255,255,.72);font-size:11px; }.go-room b { font-size:14px; }.go-room span { font-size:14px;font-weight:800; }
+      .reward-page { min-height:100vh;background:var(--paper); }.reward-page[hidden] { display:none; }.reward-page-head { display:flex;align-items:center;gap:12px;padding:max(18px,env(safe-area-inset-top)) 16px 16px;color:#fff;background:var(--navy); }.back-button { width:30px;height:30px;border:0;color:#fff;background:transparent;cursor:pointer;font-size:25px;line-height:1; }.reward-page-head h1 { margin:0;font-size:20px; }.reward-page-head p { margin:3px 0 0;color:rgba(255,255,255,.68);font-size:11px; }.reward-main { padding:16px; }.reward-banner { display:flex;align-items:center;gap:12px;padding:15px;color:#fff;background:#2e7089; }.reward-banner-icon { display:grid;width:42px;height:42px;place-items:center;border-radius:50%;background:rgba(255,255,255,.18);font-size:18px; }.reward-banner b { display:block;font-size:15px; }.reward-banner span { display:block;margin-top:4px;color:rgba(255,255,255,.78);font-size:11px;line-height:1.4; }.reward-section { margin-top:22px; }.reward-section h2 { margin:0;font-size:17px; }.reward-section > p { margin:5px 0 10px;color:var(--muted);font-size:12px;line-height:1.45; }.rank-awards { display:grid;gap:8px; }.rank-award { display:grid;grid-template-columns:54px 1fr auto;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);background:#fff; }.rank-award-rank { display:grid;width:48px;height:48px;place-items:center;color:#fff;background:#c69225;font-size:12px;font-weight:800;text-align:center; }.rank-award-rank.total { background:#805fa5; }.rank-award b { display:block;font-size:14px; }.rank-award span { display:block;margin-top:4px;color:var(--muted);font-size:11px; }.rank-award small { color:#8f6a1c;font-size:10px;text-align:right; }.reward-config { margin-top:8px;padding:10px 12px;border-left:3px solid var(--gold);color:#7b6838;background:#fff9e8;font-size:11px;line-height:1.45; }.reward-track-tabs { display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0; }.reward-track-tab { border:1px solid var(--line);padding:9px;background:#fff;cursor:pointer;font-size:12px;font-weight:800; }.reward-track-tab.active { border-color:var(--navy);color:#fff;background:var(--navy); }.badge-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:8px; }.badge-card { min-height:130px;padding:10px;border:1px solid var(--line);background:#fff;text-align:center; }.badge-art { display:grid;width:42px;height:42px;place-items:center;margin:0 auto 8px;border-radius:50%;color:#fff;font-size:15px;font-weight:800; }.badge-art.bronze { background:#a87955; }.badge-art.silver { background:#7f96a1; }.badge-art.gold { background:#d59c22; }.badge-card b { display:block;font-size:12px; }.badge-card span { display:block;margin-top:4px;color:#947027;font-size:11px;font-weight:800; }.badge-card small { display:block;margin-top:5px;color:var(--muted);font-size:10px;line-height:1.3; }
+      .modal { position:fixed;inset:0;z-index:4;display:none;place-items:end center;background:rgba(17,30,35,.54); }.modal.show { display:grid; }.sheet { width:min(100%,430px);max-height:78vh;overflow-y:auto;padding:20px 18px max(23px,env(safe-area-inset-bottom));background:#fff; }.sheet h3 { margin:0;font-size:18px; }.sheet p { color:#65737a;font-size:13px;line-height:1.6; }.sheet button { width:100%;border:0;padding:13px;color:#fff;background:var(--navy);cursor:pointer;font-weight:800; }.sheet .all-records { margin-bottom:16px; }.record-history { height:240px;margin:14px 0;overflow-y:auto;overscroll-behavior:contain; }.history-row { display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:10px;padding:13px 0;border-top:1px solid var(--line); }.history-number { color:#68767b;font-size:13px;font-weight:800;text-align:center; }.history-time { color:#69767b;font-size:12px; }.history-score { color:var(--coral);font-size:14px;font-weight:800;text-align:right; }
+      .branch-nav { display:flex;gap:18px;margin:18px 0 0;border-bottom:1px solid var(--line);padding-bottom:10px; }.branch-nav a { color:var(--teal);font-size:13px;font-weight:800;text-decoration:none; }.official { margin-top:22px;scroll-margin-top:16px; }.official h2 { margin:0;font-size:18px; }.official p,.branch-copy { color:var(--muted);font-size:12px;line-height:1.6; }.official-summary { display:flex;justify-content:space-between;gap:12px;margin:12px 0;font-size:12px; }.badge-card { cursor:pointer;min-width:0;padding:10px 6px;color:var(--ink);border-radius:6px; }.badge-card.locked .badge-art { background:#58636a;opacity:.45; }.badge-card.locked b { color:#77838a; }.badge-card.lit { border-color:#d8b05c;background:#fffaf0; }.badge-card.lit .badge-art { box-shadow:0 0 0 4px #f8edcf; }.badge-card progress { display:block;width:100%;height:6px;margin:9px 0;accent-color:var(--teal); }.badge-card .ordinal { min-height:28px;color:var(--teal);line-height:1.5; }.sheet .record-track-tab,.sheet .record-gift { color:var(--ink);background:#fff;border:1px solid var(--line);padding:8px 5px; }.sheet .record-track-tab.active { color:#fff;background:var(--navy); }.sheet .record-gift.active { border:2px solid var(--coral);padding:7px 4px;background:#fffaf8; }
+      @media(min-width:520px){.phone{min-height:900px;margin:24px auto;border-radius:20px;box-shadow:0 20px 58px rgba(27,48,56,.20)}}
+    </style>
+  </head>
+  <body>
+    <div class="phone">
+      <header class="hero" id="activityHero">
+        <div class="topbar"><span>Sawa 连击争霸赛</span><div class="header-actions"><button class="rule" id="rewardButton">榜单奖励</button><button class="rule" id="ruleButton">规则</button></div></div>
+        <div class="hero-copy"><p class="eyebrow">11.12 - 11.18</p><h1>连击争霸赛</h1><p class="sub">选择活动礼物，在房间内完成连击。刷新自己的纪录，超过好友，冲击全服荣耀。</p></div>
+      </header>
+      <main id="activityPage">
+        <section class="quick-play"><div class="quick-play-head"><h2>三步开始挑战</h2><span>仅房间送礼计入</span></div><div class="play-steps"><div class="play-step"><div class="play-icon">礼</div><b>选活动礼物</b><span>在房间礼物栏中选择</span></div><div class="play-step"><div class="play-icon">连</div><b>完成连击</b><span>手速比次数，实力比最高连击</span></div><div class="play-step"><div class="play-icon">榜</div><b>刷新战绩</b><span>服务端确认后自动上榜</span></div></div></section>
+        <div class="section-head"><h2>选择挑战赛道</h2><button class="record-entry" id="recordEntry">我的挑战</button></div>
+        <div class="track-tabs"><button class="track-tab active" data-track="speed"><b>手速挑战</b><span>低价礼物 · 10 秒内谁连得更多</span></button><button class="track-tab" data-track="power"><b>实力挑战</b><span>高价礼物 · 谁的单轮连击更高</span></button></div>
+        <div class="section-head"><h2 id="giftShelfTitle">活动礼物栏</h2><span id="giftShelfSub">选择一款礼物开始</span></div><div class="gift-shelf" id="giftShelf"></div>
+        <nav class="branch-nav"><a href="#officialChallenge">官方挑战 · 点亮勋章</a><a href="#competition">玩家竞技 · 冲击榜单</a></nav>
+        <section class="official" id="officialChallenge"><h2>官方挑战</h2><p id="officialRule"></p><div class="official-summary" id="officialSummary"></div><div class="badge-grid" id="badgeGrid"></div></section>
+        <div class="section-head" id="competition"><h2>玩家竞技</h2><span id="selectedHint">星光 · 50 钻</span></div><p class="branch-copy">和房间、好友、全服比成绩。全服日榜、总榜结算前 3 名可赢取榜单奖励。</p>
+        <section class="rank-panel"><div class="selected-title" id="selectedGift"></div><div class="rank-scope" id="rankScope"></div><div class="rank-toolbar"><span class="track-title" id="trackTitle"></span><div class="period"><button class="period-button active" data-period="day">日榜</button><button class="period-button" data-period="total">总榜</button></div></div><p class="rank-explain" id="rankExplain"></p><div id="board"></div></section>
+        <button class="go-room" id="goRoom"><span><small id="goRoomCaption">前往活动礼物栏，送出第一份礼物即可开始</small><b>前往房间参与挑战</b></span><span>去挑战</span></button>
+      </main>
+      <section class="reward-page" id="rewardPage" hidden>
+        <header class="reward-page-head"><button class="back-button" id="closeRewards" aria-label="返回">‹</button><div><h1>榜单奖励</h1><p>全服日榜与总榜结算奖励</p></div></header>
+        <main class="reward-main">
+          <section class="reward-banner"><div class="reward-banner-icon">★</div><div><b>挑战全服前三</b><span>以结算时的最终名次为准。房间榜、好友榜用于比拼，不发放榜单奖励。</span></div></section>
+          <section class="reward-section"><h2>全服榜单奖励</h2><p>每件活动礼物均独立排行；进入对应全服榜单 Top 3，即可获得结算奖励。</p><div class="rank-awards"><div class="rank-award"><div class="rank-award-rank">日榜<br>Top 3</div><div><b>每日榜单结算奖励</b><span>沙特时间 0 点结算，按最终排名发放</span></div><small>奖励待配置</small></div><div class="rank-award"><div class="rank-award-rank total">总榜<br>Top 3</div><div><b>活动总榜结算奖励</b><span>活动结束后结算，按最终排名发放</span></div><small>奖励待配置</small></div></div><div class="reward-config">榜单奖励的具体资产尚未在需求文档中配置。上线前需补全每个赛道、每件礼物 Top 3 的实际奖励，前端再替换此处展示。</div></section>
+        </main>
+      </section>
+    </div>
+    <div class="modal" id="modal"><div class="sheet" id="sheetContent"></div></div>
+    <script>
+      const gifts = [
+        { id:'10', name:'晨光', price:10, art:'10', cls:'g10', track:'speed', my:41, friend:48, global:87, tries:7 },
+        { id:'15', name:'心愿', price:15, art:'15', cls:'g15', track:'speed', my:38, friend:46, global:91, tries:6 },
+        { id:'50', name:'星光', price:50, art:'50', cls:'g50', track:'speed', my:16, friend:42, global:103, tries:5 },
+        { id:'150', name:'王冠', price:150, art:'150', cls:'g150', track:'speed', my:28, friend:39, global:68, tries:8 },
+        { id:'399', name:'荣耀', price:399, art:'399', cls:'g399', track:'power', my:11, friend:20, global:142, tries:6 },
+        { id:'999', name:'星河', price:999, art:'999', cls:'g999', track:'power', my:5, friend:10, global:76, tries:3 },
+        { id:'1299', name:'皇室', price:1299, art:'1K', cls:'g1299', track:'power', my:6, friend:10, global:55, tries:5 },
+        { id:'5999', name:'传奇', price:5999, art:'6K', cls:'g5999', track:'power', my:2, friend:5, global:27, tries:2 }
+      ];
+      const roomNames = ['Lina','你','Omar','Hala','Noura'];
+      const friendNames = ['Hala','你','Rayan','Noor'];
+      const globalNames = ['Ahmad','Hala','Rayan','Noor','Ammar','Lina','Omar','Noura','Faisal','Sara'];
+      const isInRoom = new URLSearchParams(window.location.search).get('context') !== 'outside';
+      let track = 'speed', selected = gifts[2], scope = isInRoom ? 'room' : 'friend', period = 'day';
+      const el = id => document.getElementById(id);
+      function selectGift(id) { selected = gifts.find(g => g.id === id); render(); }
+      function selectTrack(nextTrack) {
+        track = nextTrack;
+        selected = gifts.find(g => g.track === track);
+        render();
+      }
+      function shelf() {
+        const trackGifts = gifts.filter(g => g.track === track);
+        el('giftShelfTitle').textContent = '活动礼物栏';
+        el('giftShelfSub').textContent = track === 'speed' ? '低价礼物 · 10 秒比次数' : '高价礼物 · 单轮比连击';
+        el('giftShelf').innerHTML = trackGifts.map(g => `<button class="gift ${g.id === selected.id ? 'selected' : ''}" data-id="${g.id}"><span class="gift-art ${g.cls}">${g.art}</span><span class="gift-name">${g.name}</span><span class="gift-price">${g.price.toLocaleString()} 钻</span></button>`).join('');
+        document.querySelectorAll('.gift').forEach(b => b.addEventListener('click', () => selectGift(b.dataset.id)));
+      }
+      function records() {
+        return gifts.map(g => `<button class="record-pill" data-id="${g.id}"><span>${g.name} · ${g.price.toLocaleString()} 钻</span><b>${g.my} ${g.track === 'speed' ? '次 / 10 秒' : '连'}</b><small>${g.track === 'speed' ? '手速挑战' : '实力挑战'}</small></button>`).join('');
+      }
+      function selectedHeader() {
+        const trackLabel = selected.track === 'speed' ? '手速榜' : '实力榜';
+        el('selectedHint').textContent = selected.name + ' · ' + selected.price.toLocaleString() + ' 钻';
+        el('selectedGift').innerHTML = `<span class="selected-art ${selected.cls}">${selected.art}</span><div><h3>${selected.name}礼物挑战</h3><p>${selected.track === 'speed' ? '固定 10 秒内，送出更多有效连击。' : '用单轮最高有效连击，争夺实力纪录。'}</p><span class="track-chip">${trackLabel} · ${selected.price.toLocaleString()} 钻赛道</span></div>`;
+        el('trackTitle').textContent = trackLabel;
+        el('goRoomCaption').textContent = '前往房间活动礼物栏，成功送出' + selected.name + '即可开始';
+      }
+      function renderScope() {
+        const scopes = isInRoom
+          ? [{ id:'room', label:'房间榜' }, { id:'friend', label:'好友榜' }, { id:'global', label:'全服榜' }]
+          : [{ id:'friend', label:'好友榜' }, { id:'global', label:'全服榜' }];
+        const container = el('rankScope');
+        container.classList.toggle('two', scopes.length === 2);
+        container.innerHTML = scopes.map(item => `<button class="scope ${scope === item.id ? 'active' : ''}" data-scope="${item.id}">${item.label}</button>`).join('');
+        document.querySelectorAll('.scope').forEach(button => button.addEventListener('click', () => { scope = button.dataset.scope; render(); }));
+      }
+      function board() {
+        const isRoom = scope === 'room';
+        const isFriend = scope === 'friend';
+        const isSpeed = selected.track === 'speed';
+        const periodLabel = period === 'day' ? '今日' : '活动期';
+        const periodBonus = period === 'total' ? (isSpeed ? 18 : 7) : 0;
+        const myScore = selected.my + (period === 'total' ? (isSpeed ? 8 : 3) : 0);
+        const first = isRoom ? (isSpeed ? Math.max(12, myScore + 8 + periodBonus) : Math.max(3, myScore + 3 + periodBonus)) : (isFriend ? (isSpeed ? selected.friend + periodBonus : Math.max(5, Math.round(selected.friend * .58) + periodBonus)) : (isSpeed ? selected.global + periodBonus : Math.max(6, Math.round(selected.global * .62) + periodBonus)));
+        const step = isSpeed ? 7 : 3;
+        const names = isRoom ? roomNames : (isFriend ? friendNames : globalNames);
+        const hasScore = selected.my > 0;
+        const list = names.map((name,index) => {
+          if (name === '你' && !hasScore) return null;
+          return { name, score:name === '你' ? myScore : Math.max(1,first-index*step+(name === 'Ahmad' ? 5 : 0)), achievedAt:index + 1 };
+        }).filter(Boolean).sort((a,b) => b.score - a.score || a.achievedAt - b.achievedAt);
+        const myIndex = list.findIndex(row => row.name === '你');
+        const isOutsideTopList = myIndex === -1;
+        const target = isOutsideTopList ? list[list.length - 1] : list[Math.max(0, myIndex - 1)];
+        const gap = hasScore ? Math.max(0, target.score - myScore + (myIndex === 0 ? 0 : 1)) : 0;
+        const unit = isSpeed ? '次' : '连';
+        const scopeTitle = isRoom ? '房间榜' : (isFriend ? '好友榜' : '全服榜');
+        const displayLimit = isFriend ? 100 : 10;
+        el('rankExplain').textContent = `${scopeTitle}${period === 'day' ? '日榜' : '总榜'}：${isSpeed ? '比较 10 秒内完成的有效连击次数。' : '比较单轮最高有效连击次数。'} 并列时先达成者排名靠前，展示前 ${displayLimit} 名。`;
+        const goal = !hasScore ? '暂未有成绩，快去挑战吧' : (myIndex === 0 ? '已登顶！目前尚无对手' : (isOutsideTopList ? '差一点！再多 ' + gap + ' ' + unit + '即可上榜' : '再多 ' + gap + ' ' + unit + '即可超越上一名'));
+        const goalDetail = !hasScore ? '送出活动礼物后自动开始挑战' : (isOutsideTopList ? '当前距' + scopeTitle + '最后一名' : (myIndex === 0 ? '你的最好成绩已暂居第一' : '当前位列' + scopeTitle + '第 ' + (myIndex + 1)));
+        const personalScore = hasScore ? myScore + ' ' + (isSpeed ? '次 / 10 秒' : '连') : '--';
+        el('board').innerHTML = list.map((row,index) => `<div class="leader ${row.name === '你' ? 'mine' : ''}"><div class="rank ${index < 3 ? 'top' : ''}">${index+1}</div><div class="avatar a${index%5+1}">${row.name === '你' ? '我' : row.name.slice(0,1)}</div><div class="leader-name">${row.name}</div><div class="leader-score">${row.score} ${unit}</div></div>`).join('') + `<div class="my-gap"><div><span class="my-gap-label">${selected.name}礼物 · ${isSpeed ? '我的手速最高纪录' : '我的最高连击'}</span><b>${personalScore}</b></div><div><strong>${goal}</strong><small>${goalDetail}</small></div></div>`;
+      }
+      function controls() {
+        document.querySelectorAll('.track-tab').forEach(x => x.classList.toggle('active', x.dataset.track === track));
+        document.querySelectorAll('.period-button').forEach(x => x.classList.toggle('active',x.dataset.period === period));
+      }
+      function render() { shelf(); selectedHeader(); renderScope(); board(); controls(); renderBadges(track); }
+      function renderBadges(rewardTrack) {
+        const badges = rewardTrack === 'speed'
+          ? [{ level:'铜', score:'10 次', name:'手速菜鸟', cls:'bronze' }, { level:'银', score:'20 次', name:'连击能手', cls:'silver' }, { level:'金', score:'30 次', name:'极速之王', cls:'gold' }]
+          : [{ level:'铜', score:'10 连', name:'连击新锐', cls:'bronze' }, { level:'银', score:'20 连', name:'连击掌控者', cls:'silver' }, { level:'金', score:'30 连', name:'连击传奇', cls:'gold' }];
+        const best = selected.my + (rewardTrack === 'speed' ? 8 : 3);
+        const unit = rewardTrack === 'speed' ? '次' : '连';
+        const giftIndex = gifts.indexOf(selected);
+        const counts = [2346, 861, 238].map(n => Math.max(1, Math.floor(n / (giftIndex + 1))));
+        el('officialRule').textContent = selected.name + (rewardTrack === 'speed' ? ' · 单轮前 10 秒内达标，逐级点亮勋章。' : ' · 单轮连击达标，逐级点亮勋章。') + '不受竞技排名影响。';
+        el('officialSummary').innerHTML = `<b>活动最佳：${best} ${unit}</b><span>已点亮 ${[10,20,30].filter(n => best >= n).length} / 3</span>`;
+        el('badgeGrid').innerHTML = badges.map((badge,index) => {
+          const threshold = (index + 1) * 10;
+          const completed = best >= threshold;
+          const ordinal = Math.max(1, Math.floor(counts[index] * .63));
+          return `<button class="badge-card ${completed ? 'lit' : 'locked'}" data-badge="${index}"><div class="badge-art ${badge.cls}">${badge.level}</div><b>${badge.name}</b><span>${badge.score} · ${completed ? '已点亮' : '未完成'}</span><progress max="${threshold}" value="${Math.min(best,threshold)}" aria-label="${badge.name}完成进度"></progress><small>${Math.min(best,threshold)} / ${threshold} ${unit}</small><small>全服 ${counts[index].toLocaleString()} 人完成</small><small class="ordinal">${completed ? '我是全服第 ' + ordinal.toLocaleString() + ' 位达成者' : '单轮还差 ' + (threshold-best) + ' ' + unit}</small></button>`;
+        }).join('');
+        document.querySelectorAll('[data-badge]').forEach(button => button.addEventListener('click', () => {
+          const index = Number(button.dataset.badge), threshold = (index+1)*10, completed = best >= threshold;
+          el('sheetContent').innerHTML = `<h3>${completed ? '已点亮 · ' : ''}${badges[index].name}</h3><p>${selected.name} · ${rewardTrack === 'speed' ? '单轮前 10 秒' : '单轮'}达到 ${threshold} ${unit}</p><p>${completed ? '你是全服第 ' + Math.max(1, Math.floor(counts[index]*.63)).toLocaleString() + ' 位完成本项挑战的用户。' : '你的最佳成绩为 ' + best + ' ' + unit + '，单轮还差 ' + (threshold-best) + ' ' + unit + '点亮勋章。'}</p><p>全服已有 ${counts[index].toLocaleString()} 人完成。首次达成顺序将被记录，不代表竞技榜排名。</p><button id="closeBadge">知道了</button>`;
+          el('modal').classList.add('show');
+          el('closeBadge').onclick = () => el('modal').classList.remove('show');
+        }));
+      }
+      function showRewards() {
+        el('activityHero').hidden = true;
+        el('activityPage').hidden = true;
+        el('rewardPage').hidden = false;
+        window.scrollTo(0, 0);
+      }
+      function closeRewards() {
+        el('rewardPage').hidden = true;
+        el('activityHero').hidden = false;
+        el('activityPage').hidden = false;
+        window.scrollTo(0, 0);
+      }
+      function challengeHistory(gift) {
+        const isSpeed = gift.track === 'speed';
+        const timestamps = ['2026-11-19 20:36:21', '2026-11-19 19:12:44', '2026-11-18 22:08:37', '2026-11-18 20:44:15', '2026-11-18 18:03:12', '2026-11-17 21:36:56', '2026-11-17 20:09:31', '2026-11-16 22:42:08'];
+        const step = isSpeed ? 3 : 1;
+        const values = Array.from({ length: gift.tries }, (_, index) => Math.max(2, gift.my + (isSpeed ? 8 : 3) - index * step));
+        return values.map((value, index) => `<div class="history-row"><div class="history-number">${index + 1}</div><div class="history-time">${timestamps[index]}</div><div class="history-score">${isSpeed ? value + ' 次' : value + ' 连'}</div></div>`).join('');
+      }
+      function showRecords() {
+        const filterTrack = track;
+        const filterGifts = gifts.filter(gift => gift.track === filterTrack);
+        const activeGift = filterGifts.find(gift => gift.id === selected.id) || filterGifts[0];
+        const trackTabs = `<div class="record-track-tabs"><button class="record-track-tab ${filterTrack === 'speed' ? 'active' : ''}" data-record-track="speed">手速挑战</button><button class="record-track-tab ${filterTrack === 'power' ? 'active' : ''}" data-record-track="power">实力挑战</button></div>`;
+        const giftShelf = filterGifts.map(gift => `<button class="record-gift ${gift.id === activeGift.id ? 'active' : ''}" data-id="${gift.id}"><span class="gift-art ${gift.cls}">${gift.art}</span><span class="gift-name">${gift.name}</span><span class="gift-price">${gift.price.toLocaleString()} 钻</span></button>`).join('');
+        const rows = challengeHistory(activeGift);
+        el('sheetContent').innerHTML = `<h3>我的挑战</h3><p>选择挑战类型和礼物，查看对应的历史挑战记录。</p>${trackTabs}<div class="record-gift-shelf">${giftShelf}</div><div class="record-count">${activeGift.name} · 已挑战 ${activeGift.tries} 次</div><div class="record-history">${rows}</div><button id="closeRecords">关闭</button>`;
+        el('modal').classList.add('show');
+        document.querySelectorAll('[data-record-track]').forEach(button => button.addEventListener('click', () => { track = button.dataset.recordTrack; selected = gifts.find(gift => gift.track === track); showRecords(); }));
+        document.querySelectorAll('.record-gift[data-id]').forEach(button => button.addEventListener('click', () => { selected = gifts.find(gift => gift.id === button.dataset.id); showRecords(); }));
+        el('closeRecords').addEventListener('click', () => { el('modal').classList.remove('show'); render(); });
+      }
+      document.querySelectorAll('.track-tab').forEach(x => x.addEventListener('click', () => selectTrack(x.dataset.track)));
+      document.querySelectorAll('.period-button').forEach(x => x.addEventListener('click', () => { period=x.dataset.period; render(); }));
+      el('recordEntry').addEventListener('click', showRecords);
+      el('rewardButton').addEventListener('click', showRewards);
+      el('closeRewards').addEventListener('click', closeRewards);
+      document.querySelectorAll('[data-reward-track]').forEach(button => button.addEventListener('click', () => renderBadges(button.dataset.rewardTrack)));
+      el('ruleButton').addEventListener('click', () => {
+        el('sheetContent').innerHTML = `<h3>活动规则</h3><p>1. 在活动礼物栏成功送出指定礼物，即自动开始对应挑战。<br>2. 手速挑战统计 10 秒内的有效连击次数；实力挑战统计本轮最高有效连击次数。<br>3. 仅服务端成功送出的礼物计入成绩；多人送礼时，每次连击只计 1 次。<br>4. 房间榜仅比较当前房间内成绩；好友榜展示前 100 名互关好友；全服榜展示前 10 名。<br>5. 每位用户仅取该礼物的最高战绩参与排序；同分时先达成者排名靠前。日榜按沙特时间 0 点重置。</p><button id="closeRule">我知道了</button>`;
+        el('modal').classList.add('show');
+        el('closeRule').addEventListener('click', () => el('modal').classList.remove('show'));
+      });
+      el('goRoom').addEventListener('click', () => alert('此处将跳转至房间，由用户选择收礼人后完成连击。'));
+      render();
+    </script>
+  </body>
+</html>
