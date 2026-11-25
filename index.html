@@ -50,6 +50,9 @@
       .mine .avatar { background:#6197ca; }
       .node-social { margin-top:10px;min-height:54px; }
       .reward-art.medal.level-1 { color:#a8754b;background:#f7e7d7; }.reward-art.medal.level-2 { color:#638c9c;background:#e5f0f4; }.reward-art.medal.level-3 { color:#c19027;background:#fff0b6; }.medal-level { position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);min-width:26px;padding:2px 4px;border:1px solid currentColor;background:#fff;font-size:10px;font-style:normal;font-weight:800;line-height:12px; }.milestone-node small { color:#617479; }
+      .milestone-path { grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:start; }.milestone-node:not(:last-child)::after { right:-10px;width:9px;top:49px; }.milestone-node .reward-art { width:44px;height:44px; }.milestone-node b { min-height:20px; }.milestone-node .node-social { min-height:72px;font-size:10px;line-height:17px;overflow-wrap:anywhere; }.milestone-node .record-art { display:grid;place-items:center;border:1px solid #a4bbb6;border-radius:50%;background:#e5eeeb;color:#49776d;font-size:17px;font-weight:700; }.milestone-node.lit .record-art { box-shadow:none; }.milestone-node .reward-label { min-height:30px;color:#986a15;font-size:10px;line-height:15px; }.milestone-node .no-reward { color:#617479; }.reward-art.medal.level-4 { color:#a16a14;background:#ffe5a1;border-width:5px; }.official-note { margin:0 0 16px !important;font-size:12px !important;color:#617479; }.official-note strong { color:#986a15; }
+      .medal-wall-link { display:block;min-height:20px;color:var(--teal);font-size:11px;line-height:20px;text-decoration:underline;text-underline-offset:3px; }.medal-wall-link.placeholder { visibility:hidden; }.milestone-node.has-medal:hover .medal-wall-link { color:#08685f; }.milestone-node.has-medal:active .reward-art { transform:scale(.94); }
+      .jump-toast { position:fixed;z-index:6;bottom:24px;left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:12px 16px;background:#243b41;color:#fff;border-radius:6px;font-size:13px;line-height:1.5;pointer-events:none; }
       @media(min-width:520px){.phone{min-height:900px;margin:24px auto;border-radius:20px;box-shadow:0 20px 58px rgba(27,48,56,.20)}}
     </style>
   </head>
@@ -62,7 +65,7 @@
       <main id="activityPage">
         <div class="challenge-nav"><div class="mode-row"><div class="track-tabs" role="tablist" aria-label="挑战类型"><button class="track-tab active" role="tab" aria-selected="true" data-track="speed">手速挑战</button><button class="track-tab" role="tab" aria-selected="false" data-track="power">实力挑战</button></div><button class="record-entry" id="recordEntry">我的记录</button></div>
         <p class="mode-description" id="modeDescription">10 秒内，谁连击次数更多</p></div>
-        <section class="official" id="officialChallenge" aria-labelledby="milestoneHeading"><h2 class="milestone-heading" id="milestoneHeading">挑战里程碑</h2><div class="official-gift" id="officialGift"></div><div class="milestone-path" id="badgeGrid"></div><button class="go-room milestone-start" id="milestoneStart"><b>去挑战</b></button></section>
+        <section class="official" id="officialChallenge" aria-labelledby="milestoneHeading"><h2 class="milestone-heading" id="milestoneHeading">挑战里程碑</h2><div class="official-gift" id="officialGift"></div><p class="official-note">前两阶仅记录，<strong>第 3 阶起获得勋章</strong></p><div class="milestone-path" id="badgeGrid"></div><button class="go-room milestone-start" id="milestoneStart"><b>去挑战</b></button></section>
         <section id="competition" aria-label="挑战礼物与榜单">
           <div class="section-head"><h2 id="competitionHeading">手速挑战榜单</h2></div><div class="gift-shelf" id="giftShelf"></div>
           <section class="rank-panel"><div class="rank-scope" id="rankScope"></div><div class="rank-toolbar"><span class="track-title" id="rankCaption">最高纪录</span><div class="period"><button class="period-button active" data-period="day">日榜</button><button class="period-button" data-period="total">总榜</button></div></div><div id="board"></div></section>
@@ -76,18 +79,17 @@
           <section class="reward-section"><h2>成绩与排名</h2><p>仅成功扣费送出的礼物计入成绩；多人送礼时，每次连击只计 1 次。</p><p>每款礼物独立排名，每位用户只取对应榜单周期内的最高战绩；同分时，先达成者排名靠前。</p><p>房间榜比较本房间内的成绩；好友榜比较互关好友的成绩。房间榜、全服榜展示前 10 名，好友榜展示前 100 名。</p><p>日榜按沙特时间 0 点结算并重置；总榜统计整个活动期间的成绩，活动结束后结算。</p></section>
           <section class="reward-banner"><div class="reward-banner-icon">★</div><div><b>挑战全服前三</b><span>以结算时的最终名次为准。房间榜、好友榜用于比拼，不发放榜单奖励。</span></div></section>
           <section class="reward-section"><h2>全服榜单奖励</h2><p>每件活动礼物均独立排行；进入对应全服榜单 Top 3，即可获得结算奖励。</p><div class="rank-awards"><div class="rank-award"><div class="rank-award-rank">日榜<br>Top 3</div><div><b>每日榜单结算奖励</b><span>沙特时间 0 点结算，按最终排名发放</span></div><small>奖励待配置</small></div><div class="rank-award"><div class="rank-award-rank total">总榜<br>Top 3</div><div><b>活动总榜结算奖励</b><span>活动结束后结算，按最终排名发放</span></div><small>奖励待配置</small></div></div><div class="reward-config">榜单奖励的具体资产尚未在需求文档中配置。上线前需补全每个赛道、每件礼物 Top 3 的实际奖励，前端再替换此处展示。</div></section>
-          <section class="reward-section"><h2>挑战里程碑奖励</h2><p>手速、实力各有一款指定礼物，对应一枚等级勋章：手速为“极速之王”，实力为“连击传奇”。无需上榜，单轮达到门槛即可获得或升级对应勋章。</p><div class="rank-awards"><div class="rank-award"><div class="rank-award-rank">10 次</div><div><b>勋章 1 级</b><span>解锁对应挑战勋章</span></div></div><div class="rank-award"><div class="rank-award-rank">20 次</div><div><b>勋章 2 级</b><span>将同一枚勋章升至 2 级</span></div></div><div class="rank-award"><div class="rank-award-rank">30 次</div><div><b>勋章 3 级</b><span>将同一枚勋章升至 3 级</span></div></div></div><p>每款勋章仅保留已达成的最高等级，不重复发放不同等级的独立勋章。单轮直接达到更高门槛时，可直接获得对应等级，较低节点同步点亮；后续较低成绩不会使勋章降级。</p><p>指定礼物与达成状态可在主页面的“挑战里程碑”中查看；同一轮成绩可同时参与榜单排名与里程碑挑战。</p></section>
+          <section class="reward-section"><h2>挑战里程碑奖励</h2><p>两条赛道均设四阶里程碑。前两阶只记录达成成绩，不发放任何奖励；第三阶获得勋章，第四阶升级同一款勋章。手速勋章为“极速之王”，实力勋章为“连击传奇”。</p><div class="rank-awards"><div class="rank-award"><div class="rank-award-rank">10 次</div><div><b>第 1 阶 · 无奖励</b><span>仅记录达成情况</span></div></div><div class="rank-award"><div class="rank-award-rank">20 次</div><div><b>第 2 阶 · 无奖励</b><span>仅记录达成情况</span></div></div><div class="rank-award"><div class="rank-award-rank">30 次</div><div><b>第 3 阶 · 获得勋章</b><span>解锁对应赛道的第 3 阶勋章</span></div></div><div class="rank-award"><div class="rank-award-rank">40 次</div><div><b>第 4 阶 · 升级勋章</b><span>升级为对应赛道的第 4 阶勋章</span></div></div></div><p>每款勋章仅保留已达成的最高等级。单轮直接达到更高门槛时，可直接获得对应勋章，较低节点同步点亮；前两阶仍不发奖，后续较低成绩不会使勋章降级。</p><p>指定礼物与达成状态可在主页面的“挑战里程碑”中查看；同一轮成绩可同时参与榜单排名与里程碑挑战。</p></section>
         </main>
       </section>
     </div>
     <div class="modal" id="modal"><div class="sheet" id="sheetContent"></div></div>
+    <div class="jump-toast" id="jumpToast" role="status" hidden></div>
     <script>
       const gifts = [
         { id:'10', name:'晨光', price:10, art:'10', cls:'g10', track:'speed', my:41, friend:48, global:87, tries:7 },
-        { id:'15', name:'心愿', price:15, art:'15', cls:'g15', track:'speed', my:38, friend:46, global:91, tries:6 },
         { id:'50', name:'星光', price:50, art:'50', cls:'g50', track:'speed', my:16, friend:42, global:103, tries:5 },
-        { id:'150', name:'王冠', price:150, art:'150', cls:'g150', track:'speed', my:28, friend:39, global:68, tries:8 },
-        { id:'399', name:'荣耀', price:399, art:'399', cls:'g399', track:'power', my:27, friend:20, global:142, tries:6 },
+        { id:'399', name:'荣耀', price:399, art:'399', cls:'g399', track:'power', my:37, friend:20, global:142, tries:6 },
         { id:'999', name:'星河', price:999, art:'999', cls:'g999', track:'power', my:5, friend:10, global:76, tries:3 },
         { id:'1299', name:'皇室', price:1299, art:'1K', cls:'g1299', track:'power', my:6, friend:10, global:55, tries:5 },
         { id:'5999', name:'传奇', price:5999, art:'6K', cls:'g5999', track:'power', my:2, friend:5, global:27, tries:2 }
@@ -96,8 +98,9 @@
       const friendNames = ['Hala','你','Rayan','Noor'];
       const globalNames = ['Ahmad','Hala','Rayan','Noor','Ammar','Lina','Omar','Noura','Faisal','Sara'];
       const isInRoom = new URLSearchParams(window.location.search).get('context') !== 'outside';
-      let track = 'speed', selected = gifts[2], scope = isInRoom ? 'room' : 'friend', period = 'day';
+      let track = 'speed', selected = gifts.find(gift => gift.id === '50'), scope = isInRoom ? 'room' : 'friend', period = 'day';
       const el = id => document.getElementById(id);
+      let jumpToastTimer;
       function selectGift(id) { selected = gifts.find(g => g.id === id); render(); }
       function selectTrack(nextTrack) {
         track = nextTrack;
@@ -106,6 +109,7 @@
       }
       function shelf() {
         const trackGifts = gifts.filter(g => g.track === track);
+        el('giftShelf').style.gridTemplateColumns = `repeat(${trackGifts.length},minmax(0,1fr))`;
         el('giftShelf').innerHTML = trackGifts.map(g => `<button class="gift ${g.id === selected.id ? 'selected' : ''}" data-id="${g.id}"><span class="gift-art ${g.cls}">${g.art}</span><span class="gift-name">${g.name}</span><span class="gift-price">${g.price.toLocaleString()} 钻</span></button>`).join('');
         document.querySelectorAll('.gift').forEach(b => b.addEventListener('click', () => selectGift(b.dataset.id)));
       }
@@ -162,22 +166,32 @@
         // Prototype configuration: one designated gift and one badge per track.
         const officialGift = gifts.find(gift => gift.id === (rewardTrack === 'speed' ? '50' : '399'));
         const badgeName = rewardTrack === 'speed' ? '极速之王勋章' : '连击传奇勋章';
-        const badges = [1,2,3].map(level => ({name:badgeName,level,threshold:level*10}));
+        const badges = [1,2,3,4].map(level => ({name:badgeName,level,threshold:level*10,hasReward:level>=3}));
         const best = officialGift.my + (rewardTrack === 'speed' ? 8 : 3);
         el('milestoneStart').hidden = badges.every(badge => best >= badge.threshold);
         const unit = rewardTrack === 'speed' ? '次' : '连';
         const giftIndex = gifts.indexOf(officialGift);
-        const counts = [2346, 861, 238].map(n => Math.max(1, Math.floor(n / (giftIndex + 1))));
-        el('officialGift').innerHTML = `<span class="gift-art ${officialGift.cls}">${officialGift.art}</span><div><small>指定礼物达标领奖</small><b>${officialGift.name} · ${officialGift.price.toLocaleString()} 钻</b></div>`;
+        const counts = [2346, 861, 238, 95].map(n => Math.max(1, Math.floor(n / (giftIndex + 1))));
+        el('officialGift').innerHTML = `<span class="gift-art ${officialGift.cls}">${officialGift.art}</span><div><small>指定挑战礼物</small><b>${officialGift.name} · ${officialGift.price.toLocaleString()} 钻</b></div>`;
         el('badgeGrid').innerHTML = badges.map((badge,index) => {
           const threshold = badge.threshold;
           const completed = best >= threshold;
           const ordinal = Math.max(1, Math.floor(counts[index] * .63));
-          return `<button class="milestone-node ${completed ? 'lit' : 'locked'}" data-badge="${index}" aria-label="${badge.name} ${badge.level} 级，${threshold}${unit}，${completed ? '已完成' : '未完成'}"><strong>${threshold} ${unit}</strong><div class="reward-art medal level-${badge.level}" aria-hidden="true"><i></i><em class="medal-level">${badge.level}</em></div><b>${badge.name}</b><small>${badge.level} 级</small><span class="node-social">${completed ? '我是全服第 ' + ordinal.toLocaleString() + ' 位<br>完成者' : '我未完成，全服已有 ' + counts[index].toLocaleString() + ' 人完成'}</span></button>`;
+          const rewardLabel = !badge.hasReward ? '仅记录 · 无奖励' : badge.level === 3 ? '获得勋章' : '升级勋章';
+          const art = badge.hasReward ? `<div class="reward-art medal level-${badge.level}" aria-hidden="true"><i></i><em class="medal-level">${badge.level}</em></div>` : `<div class="reward-art record-art" aria-hidden="true">${badge.level}</div>`;
+          return `<button class="milestone-node ${completed ? 'lit' : 'locked'} ${badge.hasReward ? 'has-medal' : ''}" data-badge="${index}" title="${badge.hasReward ? '前往勋章墙查看勋章' : '查看挑战记录'}" aria-label="第 ${badge.level} 阶，${threshold}${unit}，${rewardLabel}，${completed ? '已完成' : '未完成'}${badge.hasReward ? '，前往勋章墙' : ''}"><strong>${threshold} ${unit}</strong>${art}<b>第 ${badge.level} 阶</b><small class="reward-label ${badge.hasReward ? '' : 'no-reward'}">${rewardLabel}</small><span class="medal-wall-link ${badge.hasReward ? '' : 'placeholder'}" aria-hidden="true">查看勋章 ↗</span><span class="node-social">${completed ? '我是全服第 ' + ordinal.toLocaleString() + ' 位<br>完成者' : '我未完成，全服已有 ' + counts[index].toLocaleString() + ' 人完成'}</span></button>`;
         }).join('');
         document.querySelectorAll('[data-badge]').forEach(button => button.addEventListener('click', () => {
           const index = Number(button.dataset.badge), threshold = badges[index].threshold, completed = best >= threshold;
-          el('sheetContent').innerHTML = `<h3>${badges[index].name} · ${badges[index].level} 级</h3><p>使用指定礼物「${officialGift.name}」，${rewardTrack === 'speed' ? '单轮前 10 秒' : '单轮'}达到 ${threshold} ${unit}。</p><p>${badges[index].level === 1 ? '解锁' : '升级为'} ${badges[index].level} 级${badgeName}，同一款勋章仅保留已达成的最高等级。</p><p>${completed ? '你是全服第 ' + Math.max(1, Math.floor(counts[index]*.63)).toLocaleString() + ' 位完成本项挑战的用户。' : '我未完成，全服已有 ' + counts[index].toLocaleString() + ' 人完成本项挑战。'}</p><button id="closeBadge">知道了</button>`;
+          const badge = badges[index];
+          if (badge.hasReward) {
+            clearTimeout(jumpToastTimer);
+            el('jumpToast').textContent = '跳转示意：勋章墙 · ' + badgeName + ' · 第 ' + badge.level + ' 阶';
+            el('jumpToast').hidden = false;
+            jumpToastTimer = setTimeout(() => { el('jumpToast').hidden = true; }, 3000);
+            return;
+          }
+          el('sheetContent').innerHTML = `<h3>第 ${badge.level} 阶 · ${badge.hasReward ? badge.name : '挑战记录'}</h3><p>使用指定礼物「${officialGift.name}」，${rewardTrack === 'speed' ? '单轮前 10 秒' : '单轮'}达到 ${threshold} ${unit}。</p><p>${badge.hasReward ? (badge.level === 3 ? '获得' : '升级为') + '第 ' + badge.level + ' 阶' + badgeName + '，同一款勋章仅保留已达成的最高等级。' : '本阶仅在页面记录达成情况，不发放勋章或其他奖励。达到第 3 阶起可获得勋章。'}</p><p>${completed ? '你是全服第 ' + Math.max(1, Math.floor(counts[index]*.63)).toLocaleString() + ' 位完成本项挑战的用户。' : '我未完成，全服已有 ' + counts[index].toLocaleString() + ' 人完成本项挑战。'}</p><button id="closeBadge">知道了</button>`;
           el('modal').classList.add('show');
           el('closeBadge').onclick = () => el('modal').classList.remove('show');
         }));
@@ -208,7 +222,7 @@
         const trackTabs = `<div class="record-track-tabs"><button class="record-track-tab ${filterTrack === 'speed' ? 'active' : ''}" data-record-track="speed">手速挑战</button><button class="record-track-tab ${filterTrack === 'power' ? 'active' : ''}" data-record-track="power">实力挑战</button></div>`;
         const giftShelf = filterGifts.map(gift => `<button class="record-gift ${gift.id === activeGift.id ? 'active' : ''}" data-id="${gift.id}"><span class="gift-art ${gift.cls}">${gift.art}</span><span class="gift-name">${gift.name}</span><span class="gift-price">${gift.price.toLocaleString()} 钻</span></button>`).join('');
         const rows = challengeHistory(activeGift);
-        el('sheetContent').innerHTML = `<h3>我的记录</h3>${trackTabs}<div class="record-gift-shelf">${giftShelf}</div><div class="record-count">已挑战 ${activeGift.tries} 次</div><div class="record-history">${rows}</div><button id="closeRecords">关闭</button>`;
+        el('sheetContent').innerHTML = `<h3>我的记录</h3>${trackTabs}<div class="record-gift-shelf" style="grid-template-columns:repeat(${filterGifts.length},minmax(0,1fr))">${giftShelf}</div><div class="record-count">已挑战 ${activeGift.tries} 次</div><div class="record-history">${rows}</div><button id="closeRecords">关闭</button>`;
         el('modal').classList.add('show');
         document.querySelectorAll('[data-record-track]').forEach(button => button.addEventListener('click', () => { track = button.dataset.recordTrack; selected = gifts.find(gift => gift.track === track); showRecords(); }));
         document.querySelectorAll('.record-gift[data-id]').forEach(button => button.addEventListener('click', () => { selected = gifts.find(gift => gift.id === button.dataset.id); showRecords(); }));
