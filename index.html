@@ -53,6 +53,13 @@
       .milestone-path { grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:start; }.milestone-node:not(:last-child)::after { right:-10px;width:9px;top:49px; }.milestone-node .reward-art { width:44px;height:44px; }.milestone-node b { min-height:20px; }.milestone-node .node-social { min-height:72px;font-size:10px;line-height:17px;overflow-wrap:anywhere; }.milestone-node .record-art { display:grid;place-items:center;border:1px solid #a4bbb6;border-radius:50%;background:#e5eeeb;color:#49776d;font-size:17px;font-weight:700; }.milestone-node.lit .record-art { box-shadow:none; }.milestone-node .reward-label { min-height:30px;color:#986a15;font-size:10px;line-height:15px; }.milestone-node .no-reward { color:#617479; }.reward-art.medal.level-4 { color:#a16a14;background:#ffe5a1;border-width:5px; }.official-note { margin:0 0 16px !important;font-size:12px !important;color:#617479; }.official-note strong { color:#986a15; }
       .medal-wall-link { display:block;min-height:20px;color:var(--teal);font-size:11px;line-height:20px;text-decoration:underline;text-underline-offset:3px; }.medal-wall-link.placeholder { visibility:hidden; }.milestone-node.has-medal:hover .medal-wall-link { color:#08685f; }.milestone-node.has-medal:active .reward-art { transform:scale(.94); }
       .jump-toast { position:fixed;z-index:6;bottom:24px;left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:12px 16px;background:#243b41;color:#fff;border-radius:6px;font-size:13px;line-height:1.5;pointer-events:none; }
+      .ranking-rewards { padding:0 12px 14px; }
+      .reward-teaser { display:flex;align-items:center;gap:9px;width:100%;border:0;padding:12px 10px;background:#fff7e5;color:var(--ink);text-align:left;cursor:pointer; }
+      .reward-teaser .teaser-icon { display:grid;place-items:center;flex:0 0 32px;height:32px;border-radius:50%;background:#f5df9f;color:#916511;font-weight:800; }
+      .reward-teaser b { display:block;font-size:12px;line-height:1.5; }.reward-teaser small { display:block;margin-top:3px;font-size:10px;color:#7c6b46; }.reward-teaser .teaser-arrow { margin-left:auto;flex-shrink:0;color:var(--teal);font-size:11px; }
+      .rank-reward-heading { display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 10px;font-size:12px; }.rank-reward-heading small { color:#7c6b46;font-size:10px;font-weight:400; }
+      .daily-perk { padding:12px;background:#fff7e5; }.naming-preview { display:flex;align-items:center;gap:10px; }.naming-preview .gift-art { margin:0;flex-shrink:0; }.naming-preview b { font-size:14px; }.naming-preview small { display:block;margin-top:4px;color:#7c6b46;font-size:11px; }.reward-footnote { margin:10px 0 0;color:#718087;font-size:10px;line-height:1.6; }
+      .podium-rewards { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px; }.podium-reward { min-width:0;padding:10px 3px;border:0;background:#faf8f1;color:var(--ink);cursor:pointer;text-align:center; }.podium-reward b { display:block;font-size:11px;line-height:1.6; }.podium-reward small { display:block;font-size:10px;line-height:1.6;color:#7c6b46;min-height:32px; }.rank-medal { display:grid;place-items:center;width:44px;height:44px;margin:0 auto 10px;border:4px double currentColor;border-radius:50%;font-size:20px;font-weight:800;color:#b78219;background:#fff0bd; }.rank-medal.silver { color:#657f91;background:#eaf1f6; }.rank-medal.bronze { color:#a96f51;background:#f9e8dc; }.podium-reward .medal-wall-link { margin-top:6px;font-size:10px; }
       @media(min-width:520px){.phone{min-height:900px;margin:24px auto;border-radius:20px;box-shadow:0 20px 58px rgba(27,48,56,.20)}}
     </style>
   </head>
@@ -68,7 +75,7 @@
         <section class="official" id="officialChallenge" aria-labelledby="milestoneHeading"><h2 class="milestone-heading" id="milestoneHeading">挑战里程碑</h2><div class="official-gift" id="officialGift"></div><p class="official-note">前两阶仅记录，<strong>第 3 阶起获得勋章</strong></p><div class="milestone-path" id="badgeGrid"></div><button class="go-room milestone-start" id="milestoneStart"><b>去挑战</b></button></section>
         <section id="competition" aria-label="挑战礼物与榜单">
           <div class="section-head"><h2 id="competitionHeading">手速挑战榜单</h2></div><div class="gift-shelf" id="giftShelf"></div>
-          <section class="rank-panel"><div class="rank-scope" id="rankScope"></div><div class="rank-toolbar"><span class="track-title" id="rankCaption">最高纪录</span><div class="period"><button class="period-button active" data-period="day">日榜</button><button class="period-button" data-period="total">总榜</button></div></div><div id="board"></div></section>
+          <section class="rank-panel"><div class="rank-scope" id="rankScope"></div><div class="rank-toolbar"><span class="track-title" id="rankCaption">最高纪录</span><div class="period"><button class="period-button active" data-period="day">日榜</button><button class="period-button" data-period="total">总榜</button></div></div><div class="ranking-rewards" id="rankingRewards"></div><div id="board"></div></section>
         </section>
         <button class="go-room" id="goRoom"><b id="goRoomLabel">去房间挑战</b></button>
       </main>
@@ -77,8 +84,8 @@
         <main class="reward-main">
           <section class="reward-section" style="margin-top:0"><h2>参与方式</h2><p>在房间内通过活动入口选择挑战礼物及收礼人，成功送出礼物后开始挑战。</p><p>手速挑战：统计 10 秒内的有效连击次数，时间结束后本轮挑战按钮停止接受点击。<br>实力挑战：不限总时长，统计单轮连续送礼的有效连击次数，中断连击后重新开始一轮。</p></section>
           <section class="reward-section"><h2>成绩与排名</h2><p>仅成功扣费送出的礼物计入成绩；多人送礼时，每次连击只计 1 次。</p><p>每款礼物独立排名，每位用户只取对应榜单周期内的最高战绩；同分时，先达成者排名靠前。</p><p>房间榜比较本房间内的成绩；好友榜比较互关好友的成绩。房间榜、全服榜展示前 10 名，好友榜展示前 100 名。</p><p>日榜按沙特时间 0 点结算并重置；总榜统计整个活动期间的成绩，活动结束后结算。</p></section>
-          <section class="reward-banner"><div class="reward-banner-icon">★</div><div><b>挑战全服前三</b><span>以结算时的最终名次为准。房间榜、好友榜用于比拼，不发放榜单奖励。</span></div></section>
-          <section class="reward-section"><h2>全服榜单奖励</h2><p>每件活动礼物均独立排行；进入对应全服榜单 Top 3，即可获得结算奖励。</p><div class="rank-awards"><div class="rank-award"><div class="rank-award-rank">日榜<br>Top 3</div><div><b>每日榜单结算奖励</b><span>沙特时间 0 点结算，按最终排名发放</span></div><small>奖励待配置</small></div><div class="rank-award"><div class="rank-award-rank total">总榜<br>Top 3</div><div><b>活动总榜结算奖励</b><span>活动结束后结算，按最终排名发放</span></div><small>奖励待配置</small></div></div><div class="reward-config">榜单奖励的具体资产尚未在需求文档中配置。上线前需补全每个赛道、每件礼物 Top 3 的实际奖励，前端再替换此处展示。</div></section>
+          <section class="reward-banner"><div class="reward-banner-icon">★</div><div><b>登顶冠名，争夺勋章</b><span>日榜第 1 名实时冠名；总榜第 1 名获得勋章及冠名 3 天。房间榜、好友榜用于比拼，不发放榜单奖励。</span></div></section>
+          <section class="reward-section"><h2>全服榜单奖励</h2><p>每款挑战礼物独立排名，仅全服第 1 名享有对应榜单奖励。</p><div class="rank-awards"><div class="rank-award"><div class="rank-award-rank">日榜<br>第 1 名</div><div><b>活动礼物栏实时冠名</b><span>冠名随当前第 1 名实时更新，仅在活动礼物栏展示。</span></div></div><div class="rank-award"><div class="rank-award-rank total">总榜<br>第 1 名</div><div><b>Top 1 勋章 + 冠名 3 天</b><span>活动结束后发放勋章，并在经典礼物栏冠名 3 天。</span></div></div></div></section>
           <section class="reward-section"><h2>挑战里程碑奖励</h2><p>两条赛道均设四阶里程碑。前两阶只记录达成成绩，不发放任何奖励；第三阶获得勋章，第四阶升级同一款勋章。手速勋章为“极速之王”，实力勋章为“连击传奇”。</p><div class="rank-awards"><div class="rank-award"><div class="rank-award-rank">10 次</div><div><b>第 1 阶 · 无奖励</b><span>仅记录达成情况</span></div></div><div class="rank-award"><div class="rank-award-rank">20 次</div><div><b>第 2 阶 · 无奖励</b><span>仅记录达成情况</span></div></div><div class="rank-award"><div class="rank-award-rank">30 次</div><div><b>第 3 阶 · 获得勋章</b><span>解锁对应赛道的第 3 阶勋章</span></div></div><div class="rank-award"><div class="rank-award-rank">40 次</div><div><b>第 4 阶 · 升级勋章</b><span>升级为对应赛道的第 4 阶勋章</span></div></div></div><p>每款勋章仅保留已达成的最高等级。单轮直接达到更高门槛时，可直接获得对应勋章，较低节点同步点亮；前两阶仍不发奖，后续较低成绩不会使勋章降级。</p><p>指定礼物与达成状态可在主页面的“挑战里程碑”中查看；同一轮成绩可同时参与榜单排名与里程碑挑战。</p></section>
         </main>
       </section>
@@ -152,7 +159,7 @@
         const gap = hasScore ? Math.max(0, target.score - myScore + (myIndex === 0 ? 0 : 1)) : 0;
         const unit = isSpeed ? '次' : '连';
         const displayLimit = isFriend ? 100 : 10;
-        el('rankCaption').textContent = scope === 'global' ? '结算前 3 名获奖' : '最高纪录';
+        el('rankCaption').textContent = scope === 'global' ? (period === 'day' ? '实时排名' : '活动总排名') : '最高纪录';
         const goal = !hasScore ? '暂无成绩，去完成首次挑战' : (myIndex === 0 ? '已排名第一，继续刷新自己的纪录' : '单轮纪录再多 ' + gap + ' ' + unit + '，即可超越上一名');
         const personalScore = hasScore ? myScore + ' ' + unit : '--';
         el('board').innerHTML = list.slice(0,displayLimit).map((row,index) => `<div class="leader ${row.name === '你' ? 'mine' : ''}"><div class="rank ${index < 3 ? 'top' : ''}">${index+1}</div><div class="avatar a${index%5+1}">${row.name === '你' ? '我' : row.name.slice(0,1)}</div><div class="leader-name">${row.name}</div><div class="leader-score">${row.score} ${unit}</div></div>`).join('') + `<div class="personal-summary"><div class="leader"><div class="rank" aria-label="我的排名">${hasScore ? myIndex+1 : '--'}</div><div class="avatar a2" aria-label="我的头像">我</div><div class="leader-name">你</div><div class="leader-score">${personalScore}</div></div><p class="personal-hint">${goal}</p></div>`;
@@ -161,7 +168,27 @@
         document.querySelectorAll('.track-tab').forEach(x => { x.classList.toggle('active', x.dataset.track === track); x.setAttribute('aria-selected', String(x.dataset.track === track)); });
         document.querySelectorAll('.period-button').forEach(x => x.classList.toggle('active',x.dataset.period === period));
       }
-      function render() { shelf(); selectedHeader(); renderScope(); board(); controls(); renderBadges(track); }
+      function rankingRewards() {
+        const container = el('rankingRewards');
+        if (scope !== 'global') {
+          container.innerHTML = `<button class="reward-teaser" id="viewGlobalRewards"><span class="teaser-icon" aria-hidden="true">${period === 'day' ? '冠' : '章'}</span><span><b>${period === 'day' ? '全服日榜第 1 名，赢礼物冠名' : '全服总榜第 1 名，赢专属勋章'}</b><small>${period === 'day' ? '实时登顶，名字出现在活动礼物栏' : '冠军另享礼物冠名 3 天'}</small></span><span class="teaser-arrow">查看全服榜 ›</span></button>`;
+          el('viewGlobalRewards').onclick = () => { scope = 'global'; render(); };
+          return;
+        }
+        if (period === 'day') {
+          const champion = el('board').querySelector('.leader-name').textContent;
+          container.innerHTML = `<div class="daily-perk"><div class="rank-reward-heading"><b>日榜第 1 名 · 礼物冠名</b><small>登顶即享</small></div><div class="naming-preview"><span class="gift-art ${selected.cls}">${selected.art}</span><div><b>${champion} 的${selected.name}</b><small>当前冠名者：${champion}</small></div></div><p class="reward-footnote">你的名字展示在活动礼物栏，随全服日榜第 1 名实时更新。</p></div>`;
+          return;
+        }
+        container.innerHTML = `<div class="rank-reward-heading"><b>全服总榜冠军奖励</b><small>活动结束后发放</small></div><button class="reward-teaser" data-rank-reward="1" aria-label="查看总榜第 1 名奖励"><span class="rank-medal" style="margin:0;flex-shrink:0" aria-hidden="true">1</span><span><b>第 1 名专属勋章</b><small>另享经典礼物栏冠名 3 天</small></span><span class="teaser-arrow">查看奖励 ›</span></button><p class="reward-footnote">每款礼物独立评奖，仅活动结束时的全服总榜第 1 名获奖。</p>`;
+        container.querySelectorAll('[data-rank-reward]').forEach(button => button.onclick = () => {
+          const rank = Number(button.dataset.rankReward);
+          el('sheetContent').innerHTML = `<h3>${selected.name} · 全服总榜第 ${rank} 名</h3><div class="rank-medal ${rank === 2 ? 'silver' : rank === 3 ? 'bronze' : ''}" style="margin-top:20px" aria-hidden="true">${rank}</div><p>活动结束时，获得该礼物全服总榜第 ${rank} 名，即可获得连击活动 Top ${rank} 勋章。</p>${rank === 1 ? '<p>另享经典礼物栏冠名 3 天，活动结束后生效。</p>' : ''}<p>房间榜、好友榜不发放榜单奖励。</p><button id="closeRankReward">知道了</button>`;
+          el('modal').classList.add('show');
+          el('closeRankReward').onclick = () => el('modal').classList.remove('show');
+        });
+      }
+      function render() { shelf(); selectedHeader(); renderScope(); board(); rankingRewards(); controls(); renderBadges(track); }
       function renderBadges(rewardTrack) {
         // Prototype configuration: one designated gift and one badge per track.
         const officialGift = gifts.find(gift => gift.id === (rewardTrack === 'speed' ? '50' : '399'));
